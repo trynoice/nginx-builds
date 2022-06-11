@@ -52,7 +52,7 @@ jobs:
           run: |
             apt-get -qq update -y
             apt-get -qq install -y gettext-base build-essential wget libpcre3-dev libssl-dev zlib1g-dev awscli
-            ./nginx-build.sh "$(pwd)/${output_name}"
+            ./nginx-build.sh "$(pwd)/${{ env.output_name }}"
 
       - name: Generate artifact checksum
         run: sha256sum ${{ env.output_name }} > ${{ env.output_name }}.sha256

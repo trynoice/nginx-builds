@@ -4,7 +4,7 @@ set -euxo pipefail
 
 # #### NGINX Builscript ####
 #
-# Requires wget, gcc, make, libpcre3-dev, libssl-dev and libghc-zlib-dev.
+# Requires wget, gcc, strip, make, libpcre3-dev, libssl-dev and libghc-zlib-dev.
 #
 # Usage: ./nginx-build.sh ABSOLUTE_OUTPUT_BINARY_PATH
 # Example: ./nginx-build.sh /usr/local/sbin/nginx
@@ -29,22 +29,22 @@ OUTPUT_BIN="$1"
 
 # download NGINX source.
 wget -O nginx.tar.gz ${NGINX_SRC_URL}
-tar zxvf nginx.tar.gz
+tar zxf nginx.tar.gz
 rm -f nginx.tar.gz
 
 # download NGINX development kit module source.
 wget -O ngx_devel_kit.tar.gz ${NGX_DEVEL_KIT_SRC_URL}
-tar zxvf ngx_devel_kit.tar.gz
+tar zxf ngx_devel_kit.tar.gz
 rm -f ngx_devel_kit.tar.gz
 
 # download nginx set misc module source.
 wget -O set-misc-nginx-module.tar.gz ${NGX_SET_MISC_MOD_SRC_URL}
-tar zxvf set-misc-nginx-module.tar.gz
+tar zxf set-misc-nginx-module.tar.gz
 rm -f set-misc-nginx-module.tar.gz
 
 # download headers more module source.
 wget -O headers-more-nginx-module.tar.gz ${NGX_HEADERS_MORE_MOD_SRC_URL}
-tar zxvf headers-more-nginx-module.tar.gz
+tar zxf headers-more-nginx-module.tar.gz
 rm -f headers-more-nginx-module.tar.gz
 
 cd nginx-${NGINX_VERSION} || exit 1
@@ -68,3 +68,4 @@ cd nginx-${NGINX_VERSION} || exit 1
 
 make -j"$(nproc)"
 make install -j"$(nproc)"
+strip "${OUTPUT_BIN}"

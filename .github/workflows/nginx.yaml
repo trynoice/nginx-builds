@@ -1,0 +1,51 @@
+name: Nginx
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release-debian-amd64:
+    name: Release Debian amd64
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    container: debian:11
+    steps:
+      - name: Install prerequisites
+        run: |
+          apt-get -qq update -y
+          apt-get -qq install -y gettext-base build-essential wget libpcre3-dev libssl-dev zlib1g-dev awscli
+
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Build nginx binary
+        run: ./nginx-build.sh "$(pwd)/nginx-debian-11-amd64"
+
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            nginx-debian-11-amd64
+
+  release-debian-aarch64:
+    name: Release Debian aarch64
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Build nginx binary
+        uses: uraimo/run-on-arch-action@v2
+        with:
+          arch: aarch64
+          distro: bullseye
+          run: |
+            apt-get -qq update -y
+            apt-get -qq install -y gettext-base build-essential wget libpcre3-dev libssl-dev zlib1g-dev awscli
+            ./nginx-build.sh "$(pwd)/nginx-debian-11-aarch64"
+
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            nginx-debian-11-aarch64

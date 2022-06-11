@@ -10,6 +10,8 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     container: debian:11
+    env:
+      output_name: nginx-debian-11-amd64
     steps:
       - name: Install prerequisites
         run: |
@@ -20,17 +22,24 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build nginx binary
-        run: ./nginx-build.sh "$(pwd)/nginx-debian-11-amd64"
+        run: ./nginx-build.sh "$(pwd)/${output_name}"
 
-      - uses: softprops/action-gh-release@v1
+      - name: Generate artifact checksum
+        run: sha256sum ${{ env.output_name }} > ${{ env.output_name }}.sha256
+
+      - name: Upload release artifacts
+        uses: softprops/action-gh-release@v1
         with:
           files: |
-            nginx-debian-11-amd64
+            ${{ env.output_name }}
+            ${{ env.output_name }}.sha256
 
   release-debian-aarch64:
     name: Release Debian aarch64
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      output_name: nginx-debian-11-aarch64
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
@@ -43,9 +52,14 @@ jobs:
           run: |
             apt-get -qq update -y
             apt-get -qq install -y gettext-base build-essential wget libpcre3-dev libssl-dev zlib1g-dev awscli
-            ./nginx-build.sh "$(pwd)/nginx-debian-11-aarch64"
+            ./nginx-build.sh "$(pwd)/${output_name}"
 
-      - uses: softprops/action-gh-release@v1
+      - name: Generate artifact checksum
+        run: sha256sum ${{ env.output_name }} > ${{ env.output_name }}.sha256
+
+      - name: Upload release artifacts
+        uses: softprops/action-gh-release@v1
         with:
           files: |
-            nginx-debian-11-aarch64
+            ${{ env.output_name }}
+            ${{ env.output_name }}.sha256

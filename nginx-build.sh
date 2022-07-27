@@ -56,6 +56,7 @@ cd nginx-${NGINX_VERSION} || exit 1
   --error-log-path=/var/log/nginx/error.log \
   --http-client-body-temp-path=/tmp/nginx-client-body-temp \
   --http-proxy-temp-path=/tmp/nginx-proxy-temp \
+  --with-http_v2_module \
   --with-http_ssl_module \
   --with-http_gzip_static_module \
   --with-http_auth_request_module \

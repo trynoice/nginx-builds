@@ -10,10 +10,10 @@ set -euxo pipefail
 # Example: ./nginx-build.sh /usr/local/sbin/nginx
 
 
-NGINX_VERSION=1.22.0
+NGINX_VERSION=1.23.2
 NGX_DEVEL_KIT_VERSION=0.3.1
 NGX_SET_MISC_MOD_VERSION=0.33
-NGX_HEADERS_MORE_MOD_VERSION=0.33
+NGX_HEADERS_MORE_MOD_VERSION=0.34
 
 NGINX_SRC_URL=http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz
 NGX_DEVEL_KIT_SRC_URL=https://github.com/vision5/ngx_devel_kit/archive/refs/tags/v${NGX_DEVEL_KIT_VERSION}.tar.gz

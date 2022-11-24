@@ -14,11 +14,13 @@ NGINX_VERSION=1.23.2
 NGX_DEVEL_KIT_VERSION=0.3.1
 NGX_SET_MISC_MOD_VERSION=0.33
 NGX_HEADERS_MORE_MOD_VERSION=0.34
+NGX_NJS_MOD_VERSION=0.7.9
 
 NGINX_SRC_URL=http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz
 NGX_DEVEL_KIT_SRC_URL=https://github.com/vision5/ngx_devel_kit/archive/refs/tags/v${NGX_DEVEL_KIT_VERSION}.tar.gz
 NGX_SET_MISC_MOD_SRC_URL=https://github.com/openresty/set-misc-nginx-module/archive/refs/tags/v${NGX_SET_MISC_MOD_VERSION}.tar.gz
 NGX_HEADERS_MORE_MOD_SRC_URL=https://github.com/openresty/headers-more-nginx-module/archive/refs/tags/v${NGX_HEADERS_MORE_MOD_VERSION}.tar.gz
+NGX_NJS_MOD_SRC_URL=http://hg.nginx.org/njs/archive/${NGX_NJS_MOD_VERSION}.tar.gz
 
 if [ -z "$1" ]; then
   echo "missing required argument: absolute path of the output binary"
@@ -33,9 +35,9 @@ tar zxf nginx.tar.gz
 rm -f nginx.tar.gz
 
 # download NGINX development kit module source.
-wget -O ngx_devel_kit.tar.gz ${NGX_DEVEL_KIT_SRC_URL}
-tar zxf ngx_devel_kit.tar.gz
-rm -f ngx_devel_kit.tar.gz
+wget -O ngx-devel-kit.tar.gz ${NGX_DEVEL_KIT_SRC_URL}
+tar zxf ngx-devel-kit.tar.gz
+rm -f ngx-devel-kit.tar.gz
 
 # download nginx set misc module source.
 wget -O set-misc-nginx-module.tar.gz ${NGX_SET_MISC_MOD_SRC_URL}
@@ -46,6 +48,11 @@ rm -f set-misc-nginx-module.tar.gz
 wget -O headers-more-nginx-module.tar.gz ${NGX_HEADERS_MORE_MOD_SRC_URL}
 tar zxf headers-more-nginx-module.tar.gz
 rm -f headers-more-nginx-module.tar.gz
+
+# download njs module source.
+wget -O njs-module.tar.gz ${NGX_NJS_MOD_SRC_URL}
+tar zxf njs-module.tar.gz
+rm -f njs-module.tar.gz
 
 cd nginx-${NGINX_VERSION} || exit 1
 ./configure \
@@ -65,7 +72,8 @@ cd nginx-${NGINX_VERSION} || exit 1
   --without-mail_smtp_module \
   --add-module=../ngx_devel_kit-${NGX_DEVEL_KIT_VERSION} \
   --add-module=../set-misc-nginx-module-${NGX_SET_MISC_MOD_VERSION} \
-  --add-module=../headers-more-nginx-module-${NGX_HEADERS_MORE_MOD_VERSION}
+  --add-module=../headers-more-nginx-module-${NGX_HEADERS_MORE_MOD_VERSION} \
+  --add-module=../njs-${NGX_NJS_MOD_VERSION}/nginx
 
 make -j"$(nproc)"
 make install -j"$(nproc)"

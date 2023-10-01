@@ -22,7 +22,7 @@ jobs:
           apt-get -qq install -y ${{ env.apt_deps }}
 
       - name: Checkout source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build nginx binary
         run: ./nginx-build.sh "$(pwd)/${output_name}"
@@ -45,7 +45,7 @@ jobs:
       output_name: nginx-debian-11-aarch64
     steps:
       - name: Checkout source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build nginx binary
         uses: uraimo/run-on-arch-action@v2

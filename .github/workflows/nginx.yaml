@@ -8,41 +8,12 @@ env:
   apt_deps: gettext-base build-essential wget libpcre3-dev libssl-dev libxslt-dev zlib1g-dev awscli
 
 jobs:
-  release-debian-amd64:
-    name: Release Debian amd64
-    timeout-minutes: 30
-    runs-on: ubuntu-latest
-    container: debian:11
-    env:
-      output_name: nginx-debian-11-amd64
-    steps:
-      - name: Install prerequisites
-        run: |
-          apt-get -qq update -y
-          apt-get -qq install -y ${{ env.apt_deps }}
-
-      - name: Checkout source
-        uses: actions/checkout@v4
-
-      - name: Build nginx binary
-        run: ./nginx-build.sh "$(pwd)/${output_name}"
-
-      - name: Generate artifact checksum
-        run: sha256sum ${{ env.output_name }} > ${{ env.output_name }}.sha256
-
-      - name: Upload release artifacts
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            ${{ env.output_name }}
-            ${{ env.output_name }}.sha256
-
   release-debian-aarch64:
     name: Release Debian aarch64
     timeout-minutes: 60
     runs-on: ubuntu-latest
     env:
-      output_name: nginx-debian-11-aarch64
+      output_name: nginx-debian-12-aarch64
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -51,7 +22,7 @@ jobs:
         uses: uraimo/run-on-arch-action@v2
         with:
           arch: aarch64
-          distro: bullseye
+          distro: bookworm
           run: |
             apt-get -qq update -y
             apt-get -qq install -y ${{ env.apt_deps }}
